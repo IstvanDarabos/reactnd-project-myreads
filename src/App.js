@@ -10,17 +10,23 @@ import './App.css'
 class BooksApp extends React.Component {
   state = {
     books: [],
-    results: []
+    results: [],
   }
   
   componentDidMount() {
-    BooksAPI.getAll().then((result) => {
-      this.setState({ booksList: result })
+    BooksAPI.getAll().then((books) => {
+      this.setState({ books })
     })
   }
   
-  changeSearchBookshelf=(books) => {
-    this.setState( {books: books} )
+  editBook = (book, shelf) => {
+    this.setState(state => {
+      state.books.map(b => {
+        b.self = b.id === book.id ? shelf : b.shelf
+        return b
+      })
+    })
+    BooksAPI.update(book, shelf)
   }
   
   searchBooks = (keyword) => {
@@ -37,10 +43,14 @@ class BooksApp extends React.Component {
     return (
       <div className="app">
         <Route path='/search' render={() => (
-          <SearchBooks onUpdateBookStatus={this.updateBookStatus} onSearchBooks={this.searchBooks}/>
+          <SearchBooks
+            books={this.state.books}
+            results={this.state.results}
+            onEdit={this.editBook}
+            onSearch={this.searchBooks}/>
         )} />
         <Route exact path='/' render={() => (
-          <books books={this.state.books} onUpdateBookStatus={this.updateBookStatus}/>
+          <Book books={this.state.books} onEdit={this.editBook}/>
         )} />
       </div>
     )
