@@ -36,17 +36,17 @@ function Bookslist(props) {
           <BookShelf
             books={nowReadBooks}
             shelf={"Currently Reading"}
-            onNewBook={onNewBook}
+            onEdit={props.onEdit}
           />
           <BookShelf
             books={wantToReadBooks}
             shelf={"Want to Read"}
-            onNewBook={onNewBook}
+            onEdit={props.onEdit}
           />
           <BookShelf
             books={readBooks}
             shelf={"Read"}
-            onNewBook={onNewBook}
+            onEdit={props.onEdit}
           />
         </div>
       </div>
@@ -57,10 +57,11 @@ function Bookslist(props) {
   );
 
 }
-
-ListBooks.propTypes = {
+/*
+BooksList.propTypes = {
   books: PropTypes.array.isRequired,
-  onEditBook: PropTypes.func.isRequired
+  onEdit: PropTypes.func.isRequired
 };
 
-export default ListBooks;
+export default BooksList;
+*/

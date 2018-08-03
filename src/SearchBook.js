@@ -1,18 +1,22 @@
 import React, {Component} from 'react'
-import { Link, Route } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import Book from './Book'
 import PropTypes from 'prop-types'
 
-class Search extends Component {
+
+class SearchBook extends Component {
+
   state = {
     results: []
   }
-  
+
+/*
   changeManager = (event) => {
     this.props.onSearch(event.target.value)
   }
-  
+*/
+
   search = (e) => {
     const query = e.target.value;
     if (!query) {
@@ -41,7 +45,7 @@ class Search extends Component {
         <div className="search-books-bar">
           <Link className="close-search" to="/">Close</Link>
           <div className="search-books-input-wrapper">
-            <input type="text" placeholder="Search by title or author" onChange={this.changeManager}/>
+            <input type="text" placeholder="Search by title or author" onChange={this.searc}/>
           </div>
         </div>
         <div className="search-books-results">
@@ -58,4 +62,12 @@ class Search extends Component {
   }
 }
 
-export default Search;
+/*
+
+SearchBook.propTypes = {
+  books: PropTypes.array,
+  results: PropTypes.array
+}
+
+*/
+export default SearchBook
