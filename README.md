@@ -18,7 +18,6 @@ Once this is finished to launch the app you can run:
 
 npm start
 
-### `update`
 This will start a server and launch your default browser pointing
 to URL localhost:3000. In case no browser is opened.
 You can start one and write that URL in the browsers address box.
