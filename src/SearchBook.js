@@ -7,16 +7,14 @@ function SearchBook(props) {
 
   const {books, results, onEdit, onSearch} = props;
 
-  let matchingBooks = [];
-  if (results.length > 0) {
-    matchingBooks = results.map(book => {
-      let match = books.find(b => b.id === book.id);
-      if (!match) {
-        book.shelf = 'none';
-      }
-      return match ? match : book;
-    });
-  }
+  const bookIds = books.map(b => b.id)
+  const mergeResults = results.map(b => {
+    if(bookIds.includes(b.id)){
+      return(books.find(s => s.id === b.id))
+    }else{
+      return(b)
+    }
+  });
 
   return (
     <div className="search-books">
@@ -32,14 +30,11 @@ function SearchBook(props) {
       </div>
       <div className="search-books-results">
         <ol className="books-grid">
-          {matchingBooks && (matchingBooks.map(book => (
+          {mergeResults.map((book,index) =>(
             <li key={book.id}>
-              <Book
-                book={book}
-                onEdit={onEdit}
-              />
+              <Book book={book} onEdit={onEdit}/>
             </li>
-          )))}
+          ))}
         </ol>
       </div>
     </div>
