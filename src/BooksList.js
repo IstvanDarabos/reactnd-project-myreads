@@ -1,18 +1,18 @@
 import React from 'react';
-import { Link, Route } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import BookShelf from './BookShelf';
 
-function Bookslist(props) {
+function BooksList(props) {
 
-  const {books, onNewBook} = props;
+  const {books, onEdit} = props;
   const nowReadBooks = [];
   const wantToReadBooks = [];
   const readBooks = [];
 
   books.forEach((book) => {
     switch(book.shelf) {
-      case 'Currently Reading':
+      case 'currentlyReading':
         nowReadBooks.push(book);
         break;
       case 'wantToRead':
@@ -36,17 +36,17 @@ function Bookslist(props) {
           <BookShelf
             books={nowReadBooks}
             shelf={"Currently Reading"}
-            onEdit={props.onEdit}
+            onEdit={onEdit}
           />
           <BookShelf
             books={wantToReadBooks}
             shelf={"Want to Read"}
-            onEdit={props.onEdit}
+            onEdit={onEdit}
           />
           <BookShelf
             books={readBooks}
             shelf={"Read"}
-            onEdit={props.onEdit}
+            onEdit={onEdit}
           />
         </div>
       </div>
@@ -57,11 +57,10 @@ function Bookslist(props) {
   );
 
 }
-/*
+
 BooksList.propTypes = {
   books: PropTypes.array.isRequired,
   onEdit: PropTypes.func.isRequired
 };
 
 export default BooksList;
-*/

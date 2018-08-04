@@ -1,35 +1,35 @@
-import React from 'react'
-import { Link, Route } from 'react-router-dom'
-import Bookslist from './BooksList'
-import SearchBook from './SearchBook'
-import Bookshelf from './BookShelf'
-import Book from './Book'
-import * as BooksAPI from './BooksAPI'
-import './App.css'
+import React from 'react';
+import { Route } from 'react-router-dom';
+import * as BooksAPI from './BooksAPI';
+import BooksList from './BooksList';
+import SearchBook from './SearchBook';
+import './App.css';
 
 class BooksApp extends React.Component {
   state = {
     books: [],
-    results: [],
-  }
-  
+    results: []
+  };
+
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
-      this.setState({ books })
+      this.setState({ books });
     })
+    this.setState({ results: [] })
   }
-  
+
   editBook = (book, shelf) => {
     this.setState(state => {
       state.books.map(b => {
-        b.self = b.id === book.id ? shelf : b.shelf
-        return b
+        b.shelf = b.id === book.id ? shelf : b.shelf;
+        return b;
       })
-    })
-    BooksAPI.update(book, shelf)
-  }
-  
-  searchBooks = (keyword) => {
+    });
+    BooksAPI.update(book, shelf);
+  };
+
+
+  searchBook = (keyword) => {
     BooksAPI.search(keyword, 200).then(results => {
       if(Array.isArray(results)){
         return(this.setState({results}))
@@ -38,23 +38,24 @@ class BooksApp extends React.Component {
       }
     })
   }
-  
+
   render() {
     return (
       <div className="app">
+        <Route exact path='/' render={() => (
+          <BooksList books={this.state.books} onEdit={this.editBook}/>
+        )} />
         <Route path='/search' render={() => (
           <SearchBook
             books={this.state.books}
             results={this.state.results}
             onEdit={this.editBook}
-            onSearch={this.searchBooks}/>
-        )} />
-        <Route exact path='/' render={() => (
-          <Book books={this.state.books} onEdit={this.editBook}/>
-        )} />
+            onSearch={this.searchBook}
+          />)}
+        />
       </div>
-    )
+    );
   }
 }
 
-export default BooksApp
+export default BooksApp;

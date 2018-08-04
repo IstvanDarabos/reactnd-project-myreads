@@ -1,73 +1,56 @@
-import React, {Component} from 'react'
-import { Link } from 'react-router-dom'
-import * as BooksAPI from './BooksAPI'
-import Book from './Book'
-import PropTypes from 'prop-types'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import Book from './Book';
 
+function SearchBook(props) {
 
-class SearchBook extends Component {
+  const {books, results, onEdit, onSearch} = props;
 
-  state = {
-    results: []
-  }
-
-/*
-  changeManager = (event) => {
-    this.props.onSearch(event.target.value)
-  }
-*/
-
-  search = (e) => {
-    const query = e.target.value;
-    if (!query) {
-      this.setState({results: []});
-      return;
-    }
-    
-    BooksAPI.search(query, 20).then(results => {
-      if (results.error) {
-        results = [];
+  let matchingBooks = [];
+  if (results.length > 0) {
+    matchingBooks = results.map(book => {
+      let match = books.find(b => b.id === book.id);
+      if (!match) {
+        book.shelf = 'none';
       }
-      results = results.map( (book) => {
-        const bookInShelf = this.props.books.find(b => b.id === book.id);
-        if (bookInShelf) {
-          book.shelf = bookInShelf.shelf;
-        }
-        return book;
-      });
-      this.setState({results});
+      return match ? match : book;
     });
   }
 
-  render() {
-    return (
-      <div className="search-books">
-        <div className="search-books-bar">
-          <Link className="close-search" to="/">Close</Link>
-          <div className="search-books-input-wrapper">
-            <input type="text" placeholder="Search by title or author" onChange={this.searc}/>
-          </div>
-        </div>
-        <div className="search-books-results">
-          <ol className="books-grid">
-            {this.state.results && this.state.results.map(book => (
-              <li key={book.id}>
-                <Book book={book} BooksList={this.props.BooksList} />
-              </li>
-            ))}
-          </ol>
+  return (
+    <div className="search-books">
+      <div className="search-books-bar">
+        <Link className="close-search" to="/">Close</Link>
+        <div className="search-books-input-wrapper">
+          <input
+            type="text"
+            placeholder="Search by title or author"
+            onChange={(event) => onSearch(event.target.value.trim())}
+          />
         </div>
       </div>
-    );
-  }
+      <div className="search-books-results">
+        <ol className="books-grid">
+          {matchingBooks && (matchingBooks.map(book => (
+            <li key={book.id}>
+              <Book
+                book={book}
+                onEdit={onEdit}
+              />
+            </li>
+          )))}
+        </ol>
+      </div>
+    </div>
+  )
 }
-
-/*
 
 SearchBook.propTypes = {
-  books: PropTypes.array,
-  results: PropTypes.array
-}
+  books: PropTypes.array.isRequired,
+  results: PropTypes.array,
+  onEdit: PropTypes.func.isRequired,
+  onSearch: PropTypes.func.isRequired
+};
 
-*/
-export default SearchBook
+export default SearchBook;

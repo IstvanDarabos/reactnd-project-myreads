@@ -1,15 +1,15 @@
-import React from 'react';
+import React from 'react'
 
 function Book(props) {
 
-  const { book, onNewBook } = props;
+  const { book, onEdit } = props
 
   return (
     <div className="book">
       <div className="book-top">
-        <div className="book-cover" style={{ width: 128, height: 196, backgroundImage: `url(${book.imageLinks.smallThumbnail || ''})` }}></div>
+        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.smallThumbnail})` }}></div>
         <div className="book-shelf-changer">
-          <select value={book.shelf} onChange={(event) => onNewBook(book, event.target.value)}>
+          <select value={book.shelf} onChange={(event) => onEdit(book, event.target.value)}>
             <option value="none" disabled>Move to...</option>
             <option value="currentlyReading">Currently Reading</option>
             <option value="wantToRead">Want to Read</option>
@@ -23,7 +23,7 @@ function Book(props) {
         {book.authors && book.authors.join(', ')}
       </div>
     </div>
-  );
+  )
 }
 
-export default Book;
+export default Book
