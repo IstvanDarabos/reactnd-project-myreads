@@ -1,62 +1,73 @@
-import React from 'react'
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import * as BooksAPI from './BooksAPI';
 import Book from './Book';
-// import BooksGrid from '../list-books/books-grid';
 
-class SearchBooks extends React.Component {
-    state = {
-        query: "",
-        books: []
+class SearchBook extends React.Component {
+  state = {
+    results: []
+  }
+  
+  handleChange = (event) => {
+    this.props.onSearch(event.target.value)
+  }
+  
+  search = (e) => {
+    const query = e.target.value
+    if (!query) {
+      this.setState({ results: [] } )
+      return
     }
 
-    doSearch = (event) => {
-        if (event.target.value) {
-            this.setState({query: event.target.value});
-            search(event.target.value).then((data) => {
-                this.setState({books: data});
-            }).catch((error) => {
-                console.log(error);
-            })
+    BooksAPI.search(query, 20).then(results => {
+      if (results.error) {
+        results = []
+      }
+      results = results.map( (book) => {
+        const bookInShelf = this.props.books.find(b => b.id === book.id)
+        if (bookInShelf) {
+          book.shelf = bookInShelf.shelf
         }
-        
-    }
+        return book
+      })
+      this.setState({results})
+    })
+  }
 
-    updateBook = (book, to) => {
-        update(book, to).then((data) => {
-            const from = book.shelf;
-            if (from) {
-                books[from].splice(books[from].indexOf(book), 1);
-            }
-            let books = this.state.books;
-            book.shelf = to;
-            this.setState({books});
-        }).catch((error) => {
-            console.log(error);
-        });
-    }
 
   render() {
     return (
-        <div className="search-books">
+      <div className="search-books">
         <div className="search-books-bar">
           <Link className="close-search" to="/">Close</Link>
           <div className="search-books-input-wrapper">
-            <input type="text"
-            placeholder="Search by title or author"
-            value={this.state.searchQuery}
-            onChange={this.doSearch}
+            <input
+              type="text"
+              placeholder="Search by title or author"
+              onChange={this.handleChange}
             />
           </div>
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            <BooksGrid books={this.state.books} updateBook={this.updateBook}></BooksGrid>
+            {this.state.results && this.state.results.map(book => (
+              <li key={book.id}>
+                <Book book={book} BooksList={this.props.BooksList}/>
+              </li>
+            ))}
           </ol>
         </div>
       </div>
     )
   }
 }
+
+SearchBook.propTypes = {
+  books: PropTypes.array.isRequired,
+  results: PropTypes.array,
+  onEdit: PropTypes.func.isRequired,
+  onSearch: PropTypes.func.isRequired
+};
 
 export default SearchBook;
