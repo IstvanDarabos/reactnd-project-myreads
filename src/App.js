@@ -11,12 +11,12 @@ class BooksApp extends React.Component {
     results: []
   };
 
-  componentDidMount() {
-    BooksAPI.getAll().then((books) => {
-      this.setState({ books });
-    })
-    this.setState({ results: [] })
-  }
+
+componentDidMount() {
+  BooksAPI.getAll().then((books) => {this.setState({ books })
+  this.setState({ results: [] })
+  }).catch(e => console.log(`Error: ${e.message}`))
+}
 
   editBook = (book, shelf) => {
     this.setState(state => {
@@ -30,15 +30,19 @@ class BooksApp extends React.Component {
 
 
   searchBook = (keyword) => {
-    BooksAPI.search(keyword, 200).then(results => {
-      if(Array.isArray(results)){
-        return(this.setState({results}))
-      }else{
-        return(this.setState({results: [] }))
-      }
-    })
-  }
+    if (keyword) {
+      BooksAPI.search(keyword, 200)
+        .then(results => {
+          this.setState({results});
+      })
+      .catch(error => console.log(error));
+    }else{
+      this.setState({results: [] });
+    }
+  };
+  
 
+  
   render() {
     return (
       <div className="app">
