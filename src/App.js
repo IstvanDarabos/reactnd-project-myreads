@@ -28,8 +28,9 @@ componentDidMount() {
     BooksAPI.update(book, shelf);
   };
 
-
+/*
   searchBook = (keyword) => {
+    alert("ráment")
     if (keyword) {
       BooksAPI.search(keyword, 200)
         .then(results => {
@@ -40,7 +41,7 @@ componentDidMount() {
       this.setState({results: [] });
     }
   };
-  
+  */
 
   
   render() {
