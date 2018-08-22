@@ -19,36 +19,33 @@ componentDidMount() {
 }
 
   editBook = (book, shelf) => {
-    this.setState(state => {
-      state.books.map(b => {
-        b.shelf = b.id === book.id ? shelf : b.shelf;
-        return b;
-      })
-    });
-    BooksAPI.update(book, shelf);
-  };
+    let updatedShelf = this.state.books.filter((b) => (b !== book))
+    let newBook = book
+    newBook.shelf = shelf
+    updatedShelf.push(newBook)
+    this.setState(state => ({books: updatedShelf}))
 
-/*
-  searchBook = (keyword) => {
-    alert("ráment")
-    if (keyword) {
-      BooksAPI.search(keyword, 200)
-        .then(results => {
-          this.setState({results});
-      })
-      .catch(error => console.log(error));
-    }else{
-      this.setState({results: [] });
-    }
-  };
-  */
+    BooksAPI.update(book, shelf)
+  }
 
-  
+  searchBooks = (keyword) => {
+    BooksAPI.search(keyword, 200).then(results => {
+      if(Array.isArray(results)){
+        return(this.setState({results}))
+      }else{
+        return(this.setState({results:[]}))
+      }
+    })
+  }
+
   render() {
     return (
       <div className="app">
         <Route exact path='/' render={() => (
-          <BooksList books={this.state.books} onEdit={this.editBook}/>
+          <BooksList
+           books={this.state.books}
+           onEdit={this.editBook}
+          />
         )} />
         <Route path='/search' render={() => (
           <SearchBook
@@ -62,5 +59,4 @@ componentDidMount() {
     );
   }
 }
-
 export default BooksApp;

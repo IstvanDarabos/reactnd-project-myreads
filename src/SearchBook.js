@@ -6,9 +6,11 @@ import * as BooksAPI from './BooksAPI'
 class SearchBook extends Component {
     state = {
         results: this.props.books,
+//        Alternative: results: [],
+//        If this is the case, a blank screen appears on the search page.
+//        Obviously this is not the better alternative.
         error: ""
     }
-
     updateQuery = (event) => {
         var query = event.target.value.trim() 
         if (query) {
@@ -26,7 +28,7 @@ class SearchBook extends Component {
     }
 
     render() {
-        const { onUpdate } = this.props
+        const { onEdit } = this.props
         return (
             <div className="search-books">
                 <div className="search-books-bar">
@@ -45,7 +47,7 @@ class SearchBook extends Component {
                             (this.state.results.map(book => {
                                 return (
                                     <li key={book.id}>
-                                        <Book book={book} onUpdate={onUpdate}/>
+                                        <Book book={book} onEdit={onEdit}/>
                                     </li>)
                                 })
                             )                      
